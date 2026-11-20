@@ -1,0 +1,7 @@
+timestamp,user,host,url,domain,category,bytes_out
+2026-11-18 14:30:00,maria.gomez,WS-0188,https://onedrive.live.com/,onedrive.live.com,cloud_storage,0
+2026-11-18 15:20:00,alice.chen,WS-0142,https://outlook.office.com/mail/,outlook.office.com,webmail,0
+2026-11-18 16:00:00,bob.martin,WS-0207,https://github.com/,github.com,developer,0
+2026-11-19 00:03:12,dana.lee,WS-0207,https://mega.nz/fm/abc123,mega.nz,cloud_storage,0
+2026-11-19 00:03:12,dana.lee,WS-0207,https://mega.nz/fm/abc123,mega.nz,cloud_storage,0
+2026-11-19 00:04:05,dana.lee,WS-0207,https://wetransfer.com/,wetransfer.com,file_share,0

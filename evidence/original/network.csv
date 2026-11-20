@@ -1,0 +1,7 @@
+timestamp,src_host,user,dest_domain,dest_ip,bytes_out,protocol,direction
+2026-11-18 15:12:00,WS-0142,alice.chen,sharepoint.com,198.51.100.60,2097152,HTTPS,outbound
+2026-11-18 16:10:00,WS-0207,bob.martin,github.com,140.82.112.4,1048576,HTTPS,outbound
+2026-11-19 00:06:44,WS-0207,dana.lee,mega.nz,203.0.113.200,48234496,HTTPS,outbound
+2026-11-19 00:06:44,WS-0207,dana.lee,mega.nz,203.0.113.200,48234496,HTTPS,outbound
+2026-11-19 00:08:10,WS-0207,dana.lee,wetransfer.com,203.0.113.201,12582912,HTTPS,outbound
+2026-11-19 02:00:00,SRV-BACKUP01,svc_backup,backup.acme-internal.com,10.20.5.8,2684354560,SMB,outbound

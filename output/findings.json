@@ -1,0 +1,1236 @@
+{
+  "generated_utc": "2026-11-20T09:54:20Z",
+  "verdict": "CONFIRMED",
+  "account": "dana.lee",
+  "endpoint": "WS-0207",
+  "window_start": "2026-11-18 23:38:05Z",
+  "window_end": "2026-11-19 00:16:00Z",
+  "sources": [
+    "authentication",
+    "browser",
+    "file_activity",
+    "forensic_artifacts",
+    "network",
+    "usb"
+  ],
+  "source_count": 6,
+  "target": {
+    "path": "\\\\fileserver\\finance\\Restricted\\FY26_Pricing_Model_RESTRICTED.xlsx",
+    "basename": "FY26_Pricing_Model_RESTRICTED.xlsx",
+    "stem": "FY26_Pricing_Model_RESTRICTED",
+    "evidence_ids": [
+      "file_activity.csv:2",
+      "file_activity.csv:3",
+      "file_activity.csv:7",
+      "file_activity.csv:8",
+      "file_activity.csv:9"
+    ],
+    "score": 65,
+    "classification": "RESTRICTED",
+    "actions": [
+      "archive",
+      "copy",
+      "read"
+    ]
+  },
+  "method": "USB copy + cloud upload",
+  "destination": "mega.nz, wetransfer.com, USB-UNK-9F3C",
+  "findings": [
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "maria.gomez",
+      "host": "WS-0188",
+      "time_utc": "2026-11-18 14:30:00+00:00",
+      "object": "https://onedrive.live.com/",
+      "evidence_ids": [
+        "browser.csv:2"
+      ],
+      "description": "cloud_storage visit to onedrive.live.com",
+      "score": 3,
+      "device": "",
+      "domain": "onedrive.live.com",
+      "decoy": true,
+      "decoy_reason": "Cloud/file-share browsing without any restricted-file access or external transfer by this account",
+      "id": "F-001"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "alice.chen",
+      "host": "WS-0142",
+      "time_utc": "2026-11-18 15:10:22+00:00",
+      "object": "\\\\fileserver\\finance\\Restricted\\FY26_Pricing_Model_RESTRICTED.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:2"
+      ],
+      "description": "read of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 3,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Authorised pricing analyst, business hours, read-only, no USB/network exfiltration",
+      "id": "F-002"
+    },
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "alice.chen",
+      "host": "WS-0142",
+      "time_utc": "2026-11-18 15:20:00+00:00",
+      "object": "https://outlook.office.com/mail/",
+      "evidence_ids": [
+        "browser.csv:3"
+      ],
+      "description": "webmail visit to outlook.office.com",
+      "score": 3,
+      "device": "",
+      "domain": "outlook.office.com",
+      "decoy": true,
+      "decoy_reason": "Cloud/file-share browsing without any restricted-file access or external transfer by this account",
+      "id": "F-003"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "alice.chen",
+      "host": "WS-0142",
+      "time_utc": "2026-11-18 15:42:10+00:00",
+      "object": "\\\\fileserver\\finance\\Restricted\\FY26_Pricing_Model_RESTRICTED.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:3"
+      ],
+      "description": "read of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 3,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Authorised pricing analyst, business hours, read-only, no USB/network exfiltration",
+      "id": "F-004"
+    },
+    {
+      "rule": "approved_usb_write",
+      "source": "usb",
+      "severity": "LOW",
+      "strong": false,
+      "user": "bob.martin",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 16:24:30+00:00",
+      "object": "USB-APPR-1140",
+      "evidence_ids": [
+        "usb.csv:3"
+      ],
+      "description": "approved USB USB-APPR-1140 connect (USB-APPR-1140)",
+      "score": 1,
+      "device": "USB-APPR-1140",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Approved USB device on the corporate allow-list; non-restricted file",
+      "id": "F-005"
+    },
+    {
+      "rule": "approved_usb_write",
+      "source": "usb",
+      "severity": "LOW",
+      "strong": false,
+      "user": "bob.martin",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 16:25:00+00:00",
+      "object": "E:\\Q4_roadmap.pptx",
+      "evidence_ids": [
+        "usb.csv:2"
+      ],
+      "description": "approved USB USB-APPR-1140 write (E:\\Q4_roadmap.pptx)",
+      "score": 1,
+      "device": "USB-APPR-1140",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Approved USB device on the corporate allow-list; non-restricted file",
+      "id": "F-006"
+    },
+    {
+      "rule": "failed_login",
+      "source": "authentication",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:38:05+00:00",
+      "object": "DEV-UNKNOWN-77",
+      "evidence_ids": [
+        "authentication.csv:5"
+      ],
+      "description": "failed login from 203.0.113.77 (Unknown)",
+      "score": 2,
+      "device": "DEV-UNKNOWN-77",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-007"
+    },
+    {
+      "rule": "anomalous_login",
+      "source": "authentication",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:40:27+00:00",
+      "object": "DEV-UNKNOWN-77",
+      "evidence_ids": [
+        "authentication.csv:6"
+      ],
+      "description": "login from new device 203.0.113.77 at 2026-11-18 18:40:27 -0500 (off-hours/new-device)",
+      "score": 4,
+      "device": "DEV-UNKNOWN-77",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-008"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:47:33+00:00",
+      "object": "\\\\fileserver\\finance\\Restricted\\FY26_Pricing_Model_RESTRICTED.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:7"
+      ],
+      "description": "read of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 3,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-009"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:49:10+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_copy.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:8"
+      ],
+      "description": "copy of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 5,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-010"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:52:18+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "file_activity.csv:9"
+      ],
+      "description": "archive of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 5,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-011"
+    },
+    {
+      "rule": "restricted_archive_created",
+      "source": "file_activity",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:52:18+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "file_activity.csv:9"
+      ],
+      "description": "restricted data archived to C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_export_2026.zip",
+      "score": 5,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-012"
+    },
+    {
+      "rule": "unapproved_usb",
+      "source": "usb",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:55:00+00:00",
+      "object": "USB-UNK-9F3C",
+      "evidence_ids": [
+        "usb.csv:4"
+      ],
+      "description": "unapproved USB USB-UNK-9F3C connect on WS-0207",
+      "score": 5,
+      "device": "USB-UNK-9F3C",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-013"
+    },
+    {
+      "rule": "unapproved_usb",
+      "source": "usb",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:57:00+00:00",
+      "object": "F:\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "usb.csv:5"
+      ],
+      "description": "unapproved USB USB-UNK-9F3C write on WS-0207",
+      "score": 5,
+      "device": "USB-UNK-9F3C",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-014"
+    },
+    {
+      "rule": "usb_restricted_copy",
+      "source": "usb",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:57:00+00:00",
+      "object": "F:\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "usb.csv:5"
+      ],
+      "description": "restricted archive written to USB USB-UNK-9F3C: F:\\pricing_export_2026.zip",
+      "score": 6,
+      "device": "USB-UNK-9F3C",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-015"
+    },
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:03:12+00:00",
+      "object": "https://mega.nz/fm/abc123",
+      "evidence_ids": [
+        "browser.csv:5"
+      ],
+      "description": "cloud_storage visit to mega.nz",
+      "score": 3,
+      "device": "",
+      "domain": "mega.nz",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-016"
+    },
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:04:05+00:00",
+      "object": "https://wetransfer.com/",
+      "evidence_ids": [
+        "browser.csv:7"
+      ],
+      "description": "file_share visit to wetransfer.com",
+      "score": 3,
+      "device": "",
+      "domain": "wetransfer.com",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-017"
+    },
+    {
+      "rule": "external_large_transfer",
+      "source": "network",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:06:44+00:00",
+      "object": "mega.nz",
+      "evidence_ids": [
+        "network.csv:4"
+      ],
+      "description": "46.0 MB outbound to mega.nz (203.0.113.200)",
+      "score": 6,
+      "device": "",
+      "domain": "mega.nz",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-018"
+    },
+    {
+      "rule": "external_large_transfer",
+      "source": "network",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:08:10+00:00",
+      "object": "wetransfer.com",
+      "evidence_ids": [
+        "network.csv:6"
+      ],
+      "description": "12.0 MB outbound to wetransfer.com (203.0.113.201)",
+      "score": 6,
+      "device": "",
+      "domain": "wetransfer.com",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-019"
+    },
+    {
+      "rule": "anti_forensics",
+      "source": "forensic_artifacts",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:12:00+00:00",
+      "object": "wevtutil cl Security (Security log cleared)",
+      "evidence_ids": [
+        "forensic_artifacts.csv:2"
+      ],
+      "description": "log_cleared on WS-0207: wevtutil cl Security (Security log cleared)",
+      "score": 6,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-020"
+    },
+    {
+      "rule": "anti_forensics",
+      "source": "forensic_artifacts",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:14:00+00:00",
+      "object": "SetFileTime on pricing_export_2026.zip",
+      "evidence_ids": [
+        "forensic_artifacts.csv:3"
+      ],
+      "description": "timestomp on WS-0207: SetFileTime on pricing_export_2026.zip",
+      "score": 6,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-021"
+    },
+    {
+      "rule": "evidence_cleanup",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:14:40+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_copy.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:10"
+      ],
+      "description": "staged copy deleted: C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_copy.xlsx",
+      "score": 4,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-022"
+    },
+    {
+      "rule": "anti_forensics",
+      "source": "forensic_artifacts",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:16:00+00:00",
+      "object": "sdelete -p 3 pricing_copy.xlsx",
+      "evidence_ids": [
+        "forensic_artifacts.csv:4"
+      ],
+      "description": "wipe_tool on WS-0207: sdelete -p 3 pricing_copy.xlsx",
+      "score": 6,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-023"
+    },
+    {
+      "rule": "service_login",
+      "source": "authentication",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 02:00:00+00:00",
+      "object": "SRV-BACKUP01",
+      "evidence_ids": [
+        "authentication.csv:8"
+      ],
+      "description": "service account login on SRV-BACKUP01",
+      "score": 1,
+      "device": "SRV-BACKUP01",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-024"
+    },
+    {
+      "rule": "bulk_backup",
+      "source": "file_activity",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 02:00:00+00:00",
+      "object": "\\\\backup\\daily\\finance_20261119",
+      "evidence_ids": [
+        "file_activity.csv:11"
+      ],
+      "description": "bulk copy to \\\\backup\\daily\\finance_20261119 (2684354560 bytes)",
+      "score": 1,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-025"
+    },
+    {
+      "rule": "large_internal_transfer",
+      "source": "network",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 02:00:00+00:00",
+      "object": "backup.acme-internal.com",
+      "evidence_ids": [
+        "network.csv:7"
+      ],
+      "description": "2560.0 MB to internal/backup backup.acme-internal.com",
+      "score": 1,
+      "device": "",
+      "domain": "backup.acme-internal.com",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-026"
+    },
+    {
+      "rule": "scheduled_log_rotation",
+      "source": "forensic_artifacts",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 08:00:00+00:00",
+      "object": "scheduled log rotation (retention policy)",
+      "evidence_ids": [
+        "forensic_artifacts.csv:5"
+      ],
+      "description": "scheduled log maintenance on SRV-BACKUP01: scheduled log rotation (retention policy)",
+      "score": 1,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-027"
+    }
+  ],
+  "linked": [
+    {
+      "rule": "failed_login",
+      "source": "authentication",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:38:05+00:00",
+      "object": "DEV-UNKNOWN-77",
+      "evidence_ids": [
+        "authentication.csv:5"
+      ],
+      "description": "failed login from 203.0.113.77 (Unknown)",
+      "score": 2,
+      "device": "DEV-UNKNOWN-77",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-007"
+    },
+    {
+      "rule": "anomalous_login",
+      "source": "authentication",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:40:27+00:00",
+      "object": "DEV-UNKNOWN-77",
+      "evidence_ids": [
+        "authentication.csv:6"
+      ],
+      "description": "login from new device 203.0.113.77 at 2026-11-18 18:40:27 -0500 (off-hours/new-device)",
+      "score": 4,
+      "device": "DEV-UNKNOWN-77",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-008"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:47:33+00:00",
+      "object": "\\\\fileserver\\finance\\Restricted\\FY26_Pricing_Model_RESTRICTED.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:7"
+      ],
+      "description": "read of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 3,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-009"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:49:10+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_copy.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:8"
+      ],
+      "description": "copy of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 5,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-010"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:52:18+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "file_activity.csv:9"
+      ],
+      "description": "archive of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 5,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-011"
+    },
+    {
+      "rule": "restricted_archive_created",
+      "source": "file_activity",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:52:18+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "file_activity.csv:9"
+      ],
+      "description": "restricted data archived to C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_export_2026.zip",
+      "score": 5,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-012"
+    },
+    {
+      "rule": "unapproved_usb",
+      "source": "usb",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:55:00+00:00",
+      "object": "USB-UNK-9F3C",
+      "evidence_ids": [
+        "usb.csv:4"
+      ],
+      "description": "unapproved USB USB-UNK-9F3C connect on WS-0207",
+      "score": 5,
+      "device": "USB-UNK-9F3C",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-013"
+    },
+    {
+      "rule": "unapproved_usb",
+      "source": "usb",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:57:00+00:00",
+      "object": "F:\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "usb.csv:5"
+      ],
+      "description": "unapproved USB USB-UNK-9F3C write on WS-0207",
+      "score": 5,
+      "device": "USB-UNK-9F3C",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-014"
+    },
+    {
+      "rule": "usb_restricted_copy",
+      "source": "usb",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 23:57:00+00:00",
+      "object": "F:\\pricing_export_2026.zip",
+      "evidence_ids": [
+        "usb.csv:5"
+      ],
+      "description": "restricted archive written to USB USB-UNK-9F3C: F:\\pricing_export_2026.zip",
+      "score": 6,
+      "device": "USB-UNK-9F3C",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-015"
+    },
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:03:12+00:00",
+      "object": "https://mega.nz/fm/abc123",
+      "evidence_ids": [
+        "browser.csv:5"
+      ],
+      "description": "cloud_storage visit to mega.nz",
+      "score": 3,
+      "device": "",
+      "domain": "mega.nz",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-016"
+    },
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:04:05+00:00",
+      "object": "https://wetransfer.com/",
+      "evidence_ids": [
+        "browser.csv:7"
+      ],
+      "description": "file_share visit to wetransfer.com",
+      "score": 3,
+      "device": "",
+      "domain": "wetransfer.com",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-017"
+    },
+    {
+      "rule": "external_large_transfer",
+      "source": "network",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:06:44+00:00",
+      "object": "mega.nz",
+      "evidence_ids": [
+        "network.csv:4"
+      ],
+      "description": "46.0 MB outbound to mega.nz (203.0.113.200)",
+      "score": 6,
+      "device": "",
+      "domain": "mega.nz",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-018"
+    },
+    {
+      "rule": "external_large_transfer",
+      "source": "network",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:08:10+00:00",
+      "object": "wetransfer.com",
+      "evidence_ids": [
+        "network.csv:6"
+      ],
+      "description": "12.0 MB outbound to wetransfer.com (203.0.113.201)",
+      "score": 6,
+      "device": "",
+      "domain": "wetransfer.com",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-019"
+    },
+    {
+      "rule": "anti_forensics",
+      "source": "forensic_artifacts",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:12:00+00:00",
+      "object": "wevtutil cl Security (Security log cleared)",
+      "evidence_ids": [
+        "forensic_artifacts.csv:2"
+      ],
+      "description": "log_cleared on WS-0207: wevtutil cl Security (Security log cleared)",
+      "score": 6,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-020"
+    },
+    {
+      "rule": "anti_forensics",
+      "source": "forensic_artifacts",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:14:00+00:00",
+      "object": "SetFileTime on pricing_export_2026.zip",
+      "evidence_ids": [
+        "forensic_artifacts.csv:3"
+      ],
+      "description": "timestomp on WS-0207: SetFileTime on pricing_export_2026.zip",
+      "score": 6,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-021"
+    },
+    {
+      "rule": "evidence_cleanup",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:14:40+00:00",
+      "object": "C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_copy.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:10"
+      ],
+      "description": "staged copy deleted: C:\\Users\\dana.lee\\AppData\\Local\\Temp\\pricing_copy.xlsx",
+      "score": 4,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-022"
+    },
+    {
+      "rule": "anti_forensics",
+      "source": "forensic_artifacts",
+      "severity": "HIGH",
+      "strong": true,
+      "user": "dana.lee",
+      "host": "WS-0207",
+      "time_utc": "2026-11-19 00:16:00+00:00",
+      "object": "sdelete -p 3 pricing_copy.xlsx",
+      "evidence_ids": [
+        "forensic_artifacts.csv:4"
+      ],
+      "description": "wipe_tool on WS-0207: sdelete -p 3 pricing_copy.xlsx",
+      "score": 6,
+      "device": "",
+      "domain": "",
+      "decoy": false,
+      "decoy_reason": "",
+      "id": "F-023"
+    }
+  ],
+  "decoys": [
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "maria.gomez",
+      "host": "WS-0188",
+      "time_utc": "2026-11-18 14:30:00+00:00",
+      "object": "https://onedrive.live.com/",
+      "evidence_ids": [
+        "browser.csv:2"
+      ],
+      "description": "cloud_storage visit to onedrive.live.com",
+      "score": 3,
+      "device": "",
+      "domain": "onedrive.live.com",
+      "decoy": true,
+      "decoy_reason": "Cloud/file-share browsing without any restricted-file access or external transfer by this account",
+      "id": "F-001"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "alice.chen",
+      "host": "WS-0142",
+      "time_utc": "2026-11-18 15:10:22+00:00",
+      "object": "\\\\fileserver\\finance\\Restricted\\FY26_Pricing_Model_RESTRICTED.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:2"
+      ],
+      "description": "read of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 3,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Authorised pricing analyst, business hours, read-only, no USB/network exfiltration",
+      "id": "F-002"
+    },
+    {
+      "rule": "cloud_file_share_visit",
+      "source": "browser",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "alice.chen",
+      "host": "WS-0142",
+      "time_utc": "2026-11-18 15:20:00+00:00",
+      "object": "https://outlook.office.com/mail/",
+      "evidence_ids": [
+        "browser.csv:3"
+      ],
+      "description": "webmail visit to outlook.office.com",
+      "score": 3,
+      "device": "",
+      "domain": "outlook.office.com",
+      "decoy": true,
+      "decoy_reason": "Cloud/file-share browsing without any restricted-file access or external transfer by this account",
+      "id": "F-003"
+    },
+    {
+      "rule": "restricted_file_activity",
+      "source": "file_activity",
+      "severity": "MEDIUM",
+      "strong": false,
+      "user": "alice.chen",
+      "host": "WS-0142",
+      "time_utc": "2026-11-18 15:42:10+00:00",
+      "object": "\\\\fileserver\\finance\\Restricted\\FY26_Pricing_Model_RESTRICTED.xlsx",
+      "evidence_ids": [
+        "file_activity.csv:3"
+      ],
+      "description": "read of restricted workbook FY26_Pricing_Model_RESTRICTED.xlsx",
+      "score": 3,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Authorised pricing analyst, business hours, read-only, no USB/network exfiltration",
+      "id": "F-004"
+    },
+    {
+      "rule": "approved_usb_write",
+      "source": "usb",
+      "severity": "LOW",
+      "strong": false,
+      "user": "bob.martin",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 16:24:30+00:00",
+      "object": "USB-APPR-1140",
+      "evidence_ids": [
+        "usb.csv:3"
+      ],
+      "description": "approved USB USB-APPR-1140 connect (USB-APPR-1140)",
+      "score": 1,
+      "device": "USB-APPR-1140",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Approved USB device on the corporate allow-list; non-restricted file",
+      "id": "F-005"
+    },
+    {
+      "rule": "approved_usb_write",
+      "source": "usb",
+      "severity": "LOW",
+      "strong": false,
+      "user": "bob.martin",
+      "host": "WS-0207",
+      "time_utc": "2026-11-18 16:25:00+00:00",
+      "object": "E:\\Q4_roadmap.pptx",
+      "evidence_ids": [
+        "usb.csv:2"
+      ],
+      "description": "approved USB USB-APPR-1140 write (E:\\Q4_roadmap.pptx)",
+      "score": 1,
+      "device": "USB-APPR-1140",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Approved USB device on the corporate allow-list; non-restricted file",
+      "id": "F-006"
+    },
+    {
+      "rule": "service_login",
+      "source": "authentication",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 02:00:00+00:00",
+      "object": "SRV-BACKUP01",
+      "evidence_ids": [
+        "authentication.csv:8"
+      ],
+      "description": "service account login on SRV-BACKUP01",
+      "score": 1,
+      "device": "SRV-BACKUP01",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-024"
+    },
+    {
+      "rule": "bulk_backup",
+      "source": "file_activity",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 02:00:00+00:00",
+      "object": "\\\\backup\\daily\\finance_20261119",
+      "evidence_ids": [
+        "file_activity.csv:11"
+      ],
+      "description": "bulk copy to \\\\backup\\daily\\finance_20261119 (2684354560 bytes)",
+      "score": 1,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-025"
+    },
+    {
+      "rule": "large_internal_transfer",
+      "source": "network",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 02:00:00+00:00",
+      "object": "backup.acme-internal.com",
+      "evidence_ids": [
+        "network.csv:7"
+      ],
+      "description": "2560.0 MB to internal/backup backup.acme-internal.com",
+      "score": 1,
+      "device": "",
+      "domain": "backup.acme-internal.com",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-026"
+    },
+    {
+      "rule": "scheduled_log_rotation",
+      "source": "forensic_artifacts",
+      "severity": "LOW",
+      "strong": false,
+      "user": "svc_backup",
+      "host": "SRV-BACKUP01",
+      "time_utc": "2026-11-19 08:00:00+00:00",
+      "object": "scheduled log rotation (retention policy)",
+      "evidence_ids": [
+        "forensic_artifacts.csv:5"
+      ],
+      "description": "scheduled log maintenance on SRV-BACKUP01: scheduled log rotation (retention policy)",
+      "score": 1,
+      "device": "",
+      "domain": "",
+      "decoy": true,
+      "decoy_reason": "Scheduled service account / approved backup job to internal backup destination",
+      "id": "F-027"
+    }
+  ],
+  "integrity": {
+    "files": [
+      {
+        "file": "authentication.csv",
+        "source": "authentication",
+        "expected": "446a08b7085caa2517f607ba364edf7de2aaaa411551e218982443ac9d3ff4d6",
+        "actual": "446a08b7085caa2517f607ba364edf7de2aaaa411551e218982443ac9d3ff4d6",
+        "status": "TRUSTED",
+        "reason": "SHA-256 matches manifest",
+        "included": true
+      },
+      {
+        "file": "browser.csv",
+        "source": "browser",
+        "expected": "79c906f9b1c5d2c5abd937c16494958d294fc157fc4207b204f426ea00e8617c",
+        "actual": "79c906f9b1c5d2c5abd937c16494958d294fc157fc4207b204f426ea00e8617c",
+        "status": "TRUSTED",
+        "reason": "SHA-256 matches manifest",
+        "included": true
+      },
+      {
+        "file": "data_dictionary.md",
+        "source": null,
+        "expected": "585bb2b0ecc2f5cb19323b2ccdfcf9860e6f655d07b2ef33ed2ce1b7de6f5e7a",
+        "actual": "585bb2b0ecc2f5cb19323b2ccdfcf9860e6f655d07b2ef33ed2ce1b7de6f5e7a",
+        "status": "TRUSTED",
+        "reason": "SHA-256 matches manifest",
+        "included": false
+      },
+      {
+        "file": "evidence_manifest.csv",
+        "source": null,
+        "expected": "",
+        "actual": "eba7c864dc21f47d6eecb867f2869cd9ea56d5d31978932bdae130deb277439b",
+        "status": "REFERENCE",
+        "reason": "manifest is the trust anchor (not self-hashed)",
+        "included": false
+      },
+      {
+        "file": "file_activity.csv",
+        "source": "file_activity",
+        "expected": "4ab2e1807eebec01f29ae39eb2b4b8d4be589161dbc6258f094d79a1726c3b0f",
+        "actual": "4ab2e1807eebec01f29ae39eb2b4b8d4be589161dbc6258f094d79a1726c3b0f",
+        "status": "TRUSTED",
+        "reason": "SHA-256 matches manifest",
+        "included": true
+      },
+      {
+        "file": "forensic_artifacts.csv",
+        "source": "forensic_artifacts",
+        "expected": "5a292bb315114264765bcd9fb68ac4c2f93afffb70e24196c4da869de8ccc4ed",
+        "actual": "5a292bb315114264765bcd9fb68ac4c2f93afffb70e24196c4da869de8ccc4ed",
+        "status": "TRUSTED",
+        "reason": "SHA-256 matches manifest",
+        "included": true
+      },
+      {
+        "file": "network.csv",
+        "source": "network",
+        "expected": "e6fe8f3a18434151eb5fc62511fe515a49baa288e438845253fa0fb636cc48d6",
+        "actual": "e6fe8f3a18434151eb5fc62511fe515a49baa288e438845253fa0fb636cc48d6",
+        "status": "TRUSTED",
+        "reason": "SHA-256 matches manifest",
+        "included": true
+      },
+      {
+        "file": "usb.csv",
+        "source": "usb",
+        "expected": "d2ff624607e86e7bb8a1be0545879ab8c62965dd0d976d13f4770a7d5201b923",
+        "actual": "d2ff624607e86e7bb8a1be0545879ab8c62965dd0d976d13f4770a7d5201b923",
+        "status": "TRUSTED",
+        "reason": "SHA-256 matches manifest",
+        "included": true
+      }
+    ],
+    "preservation_ok": true,
+    "integrity_ok": true,
+    "untrusted": [],
+    "manifest_present": true,
+    "trusted_sources": [
+      "authentication",
+      "browser",
+      "file_activity",
+      "forensic_artifacts",
+      "network",
+      "usb"
+    ],
+    "evidence_dir": "C:\\Users\\Asus\\OneDrive\\Desktop\\TCS Hackathon\\evidence\\original"
+  },
+  "parse_failures": [],
+  "duplicates": [
+    {
+      "kept": "authentication.csv:2",
+      "dropped": "authentication.csv:7",
+      "source": "authentication"
+    },
+    {
+      "kept": "file_activity.csv:2",
+      "dropped": "file_activity.csv:4",
+      "source": "file_activity"
+    },
+    {
+      "kept": "browser.csv:5",
+      "dropped": "browser.csv:6",
+      "source": "browser"
+    },
+    {
+      "kept": "network.csv:4",
+      "dropped": "network.csv:5",
+      "source": "network"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+timestamp,username,hostname,event_type,source_ip,device_id,location,is_new_device
+2026-11-18 08:55:12,alice.chen,WS-0142,login,198.51.100.24,DEV-ALICE-01,New York,false
+2026-11-18 09:02:44,maria.gomez,WS-0188,login,198.51.100.31,DEV-MARIA-01,New York,false
+2026-11-18 09:10:03,bob.martin,WS-0207,login,198.51.100.44,DEV-BOB-01,New York,false
+2026-11-18 18:38:05,dana.lee,WS-0207,failed_login,203.0.113.77,DEV-UNKNOWN-77,Unknown,true
+2026-11-18 18:40:27,Dana.Lee ,WS-0207,login,203.0.113.77,DEV-UNKNOWN-77,Unknown,true
+2026-11-18 08:55:12,alice.chen,WS-0142,login,198.51.100.24,DEV-ALICE-01,New York,false
+2026-11-18 21:00:00,svc_backup,SRV-BACKUP01,service_login,10.20.0.15,SRV-BACKUP01,Datacenter,false

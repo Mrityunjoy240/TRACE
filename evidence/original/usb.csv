@@ -1,0 +1,6 @@
+timestamp,user,host,device_id,action,volume,file,size_bytes,approved
+2026-11-18 21:55:00,bob.martin,WS-0207,USB-APPR-1140,write,E:,E:\Q4_roadmap.pptx,5242880,true
+2026-11-18 21:54:30,bob.martin,WS-0207,USB-APPR-1140,connect,E:,,0,true
+2026-11-19 05:25:00, DANA.LEE ,WS-0207,USB-UNK-9F3C,connect,F:,,0,false
+2026-11-19 05:27:00,dana.lee,WS-0207,USB-UNK-9F3C,write,F:,F:\pricing_export_2026.zip,1740800,false
+2026-11-19 05:31:00,dana.lee,WS-0207,USB-UNK-9F3C,disconnect,F:,,0,false

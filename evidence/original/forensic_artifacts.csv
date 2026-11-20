@@ -1,0 +1,5 @@
+timestamp,host,user,artifact_type,detail,tool
+2026-11-18 16:12:00,WS-0207,dana.lee,log_cleared,wevtutil cl Security (Security log cleared),wevtutil
+2026-11-18 16:14:00,WS-0207,dana.lee,timestomp,SetFileTime on pricing_export_2026.zip,powershell
+2026-11-18 16:16:00,WS-0207,dana.lee,wipe_tool,sdelete -p 3 pricing_copy.xlsx,sdelete
+2026-11-19 00:00:00,SRV-BACKUP01,svc_backup,log_cleared,scheduled log rotation (retention policy),logrotate

@@ -1,0 +1,510 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Digital Forensic Investigation Report - DED-2026-11-20-001</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;line-height:1.5;color:#1b1b1b}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.88rem}th,td{border:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top}
+th{background:#f2f4f7}code{background:#f4f4f4;padding:.1rem .25rem;border-radius:3px;word-break:break-all}
+blockquote{border-left:4px solid #c9a227;background:#fffbea;padding:.5rem 1rem}h1{border-bottom:2px solid #333}</style>
+</head><body><h1>Digital Forensic Investigation Report</h1>
+<h2>Suspected Exfiltration of Restricted Pricing Data</h2>
+
+<p><strong>Report ID:</strong> DED-2026-11-20-001</p>
+<p><strong>Classification:</strong> Internal - DFIR Training Exercise</p>
+<p><strong>Prepared for:</strong> TCS Hackathon evaluation panel</p>
+<p><strong>Prepared by:</strong> Digital Evidence Detective v1.0 (automated analysis)</p>
+<p><strong>Reviewer:</strong> ______________________________</p>
+<p><strong>Report date:</strong> 2026-11-20</p>
+<p><strong>Analysis generated:</strong> 2026-11-20T09:47:26Z</p>
+<p><strong>Distribution:</strong> Evaluators, Incident Response Lead, Data Owner, Legal/HR as appropriate</p>
+
+<blockquote><strong>Evidence provenance notice.</strong> This report was produced from a synthetic six-source training evidence set created for this prototype. All people, hosts, IP addresses and domains are fictional; destinations use TEST-NET ranges. Nothing in this report describes a real person, organisation or production system. The analytical method, integrity controls and response orchestration are real and reproducible.</blockquote>
+
+<h2>Document control</h2>
+<table>
+<tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr>
+<tr><td>1.0</td><td>2026-11-20</td><td>Digital Evidence Detective (automated)</td><td>Initial professional report generated from verified run artifacts</td></tr>
+</table>
+
+<h2>1. Executive summary</h2>
+
+<p><strong>Verdict: CONFIRMED.</strong> The account <code>dana.lee</code> on endpoint <code>WS-0207</code> accessed the restricted pricing workbook <code>FY26_Pricing_Model_RESTRICTED.xlsx</code>, copied and archived it, wrote the archive to unapproved USB device <code>USB-UNK-9F3C</code>, visited cloud/file-share services, transferred approximately 46 MB and 12 MB to <code>mega.nz</code> and <code>wetransfer.com</code>, and then executed anti-forensic actions on the endpoint. <strong>Six independent source types</strong> corroborate the same account, endpoint and file within the incident window.</p>
+
+<p><strong>Incident window (UTC):</strong> 2026-11-18 23:38:05Z to 2026-11-19 00:16:00Z.</p>
+<p><strong>Method:</strong> USB copy + cloud upload.</p>
+<p><strong>Destinations / device:</strong> mega.nz, wetransfer.com, USB-UNK-9F3C.</p>
+<p><strong>Response:</strong> evidence package sealed first (SHA-256 below), then seven simulated containment actions with rollback commands; incident record <code>INC-4613</code> opened. No production system was changed.</p>
+
+<p><strong>Impact statement.</strong> The confidentiality of a restricted pricing workbook is assessed as breached. The data may have left through two independent channels (USB and cloud), so containment must assume the workbook is outside the organisation&#x27;s control. Financial, competitive and contractual impact cannot be quantified from these logs alone.</p>
+
+<p><strong>Key judgement.</strong> The activity is not consistent with authorised business use, scheduled backup, approved USB use or routine log maintenance. It is consistent with deliberate staging and exfiltration followed by anti-forensic cleanup. Whether the actor is the account owner or a third party using compromised credentials remains unresolved.</p>
+
+<h2>2. Scope, authority and evidence</h2>
+
+<h3>2.1 Scope</h3>
+<ul>
+<li><strong>In scope:</strong> six log sources (<code>authentication</code>, <code>file_activity</code>, <code>usb</code>, <code>browser</code>, <code>network</code>, <code>forensic_artifacts</code>), the evidence manifest, the data dictionary, account <code>dana.lee</code>, endpoint <code>WS-0207</code>, and the restricted pricing workbook.</li>
+<li><strong>Out of scope:</strong> disk and memory forensics, EDR process lineage, DLP content inspection, VPN, mail, cloud-provider logs, HR records, legal attribution and law-enforcement notification.</li>
+<li><strong>Authority:</strong> simulated DFIR exercise. The response adapters are simulated; no firewall, IAM, EDR or USB policy was changed.</li>
+</ul>
+
+<h3>2.2 Evidence inventory and integrity</h3>
+<p>Preservation succeeded: <strong>True</strong>. Integrity verification succeeded: <strong>True</strong>. Manifest present: <strong>True</strong>. Raw files were copied to <code>C:\Users\Asus\OneDrive\Desktop\TCS Hackathon\evidence\original</code> and set read-only (<code>0444</code>); analysis read the copies.</p>
+
+<table>
+<tr><th>File</th><th>Source</th><th>Timezone</th><th>Rows</th><th>Integrity</th><th>SHA-256 (truncated)</th><th>Included</th></tr>
+<tr><td>authentication.csv</td><td>authentication</td><td>America/New_York (UTC-05:00)</td><td>7</td><td>TRUSTED</td><td>446a08b7085caa2517f607ba</td><td>True</td></tr>
+<tr><td>browser.csv</td><td>browser</td><td>Europe/London (UTC+00:00)</td><td>6</td><td>TRUSTED</td><td>79c906f9b1c5d2c5abd937c1</td><td>True</td></tr>
+<tr><td>data_dictionary.md</td><td>reference</td><td>n/a</td><td>n/a</td><td>TRUSTED</td><td>585bb2b0ecc2f5cb19323b2c</td><td>False</td></tr>
+<tr><td>evidence_manifest.csv</td><td>reference</td><td>n/a</td><td>n/a</td><td>REFERENCE</td><td>eba7c864dc21f47d6eecb867</td><td>False</td></tr>
+<tr><td>file_activity.csv</td><td>file_activity</td><td>UTC</td><td>10</td><td>TRUSTED</td><td>4ab2e1807eebec01f29ae39e</td><td>True</td></tr>
+<tr><td>forensic_artifacts.csv</td><td>forensic_artifacts</td><td>America/Los_Angeles (UTC-08:00)</td><td>4</td><td>TRUSTED</td><td>5a292bb315114264765bcd9f</td><td>True</td></tr>
+<tr><td>network.csv</td><td>network</td><td>UTC</td><td>6</td><td>TRUSTED</td><td>e6fe8f3a18434151eb5fc625</td><td>True</td></tr>
+<tr><td>usb.csv</td><td>usb</td><td>Asia/Kolkata (UTC+05:30)</td><td>5</td><td>TRUSTED</td><td>d2ff624607e86e7bb8a1be05</td><td>True</td></tr>
+</table>
+
+<p>The manifest contains <strong>7</strong> file hashes. All six source files and the data dictionary match their manifest SHA-256. <code>evidence_manifest.csv</code> is marked <strong>REFERENCE</strong> because it is the trust anchor and cannot self-hash. No file was UNTRUSTED in this run; a tampered-file test is documented in section 11.</p>
+
+<h3>2.3 Evidence package</h3>
+<p>The package was created <strong>before</strong> any response action: <code>evidence_package.zip</code>, <strong>12,471 bytes</strong>, <strong>13 members</strong> (including 8 originals), SHA-256 <code>f980fc3b95e818b111c868f8c5360b8ce0eb36245fd12f87e7a757e67e03710c</code>. The sidecar <code>evidence_package.zip.sha256</code>, the incident record and every action record carry the same digest.</p>
+
+<h3>2.4 Chain of custody</h3>
+<p>The custody log contains <strong>26</strong> hash-chained entries. Verification result: <strong>(True, &#x27;chain valid&#x27;)</strong>. First entry <code>ffcc2b61dc12dc2867750002...</code>; last entry <code>21803f02b035a9e5d2710c9a...</code>.</p>
+
+<table>
+<tr><th>Custody action</th><th>Entries</th></tr>
+<tr><td>evidence_package_created</td><td>1</td></tr>
+<tr><td>incident_record_created</td><td>1</td></tr>
+<tr><td>preservation_summary</td><td>1</td></tr>
+<tr><td>preserve_copy</td><td>8</td></tr>
+<tr><td>response:block_destination</td><td>2</td></tr>
+<tr><td>response:block_usb</td><td>1</td></tr>
+<tr><td>response:disable_account</td><td>1</td></tr>
+<tr><td>response:isolate_endpoint</td><td>1</td></tr>
+<tr><td>response:open_incident_record</td><td>1</td></tr>
+<tr><td>response:revoke_sessions</td><td>1</td></tr>
+<tr><td>verify_hash</td><td>8</td></tr>
+</table>
+
+<p>Each entry includes <code>timestamp</code>, <code>actor</code>, <code>action</code>, <code>file</code>, <code>sha256</code>, <code>prev_entry_hash</code> and a computed <code>entry_hash</code>. Any insertion, deletion or edit breaks the chain at the next entry.</p>
+
+<h2>3. Methodology</h2>
+
+<p>The analysis followed a fixed, reproducible sequence:</p>
+
+<p>1. <strong>Preserve + verify.</strong> Copy every raw file to <code>evidence/original</code>, set read-only, compute SHA-256 and compare with <code>evidence_manifest.csv</code>. A mismatch, missing file, unlisted file or missing manifest marks the file UNTRUSTED and excludes it from findings.</p>
+<p>2. <strong>Normalize time.</strong> Apply the per-source timezone declared in <code>data_dictionary.md</code>: authentication <code>America/New_York</code>, file_activity UTC, USB <code>Asia/Kolkata</code>, browser <code>Europe/London</code>, network UTC, forensic_artifacts <code>America/Los_Angeles</code>. Convert all values to UTC and retain local time for reporting. Epoch values and mixed formats are supported; failures are logged with evidence IDs.</p>
+<p>3. <strong>Build timeline.</strong> Merge all six sources into <code>time_utc, time_local, source_tz, source, user, host, event, object, evidence_id</code>. Normalize usernames (trim, lowercase, domain-prefix removal) and hosts (uppercase). Suppress exact duplicate rows and record them.</p>
+<p>4. <strong>Detect.</strong> Infer columns through aliases; identify the target from data (<code>RESTRICTED</code> classification, <code>pricing</code>/<code>model</code>/workbook filename, dictionary hint). Apply explainable rules for restricted-file access, archiving, USB writes, cloud visits, external transfers, anomalous authentication and anti-forensics.</p>
+<p>5. <strong>Correlate.</strong> Group findings by <code>(user, host)</code> and retain events within three hours of the first restricted-file event. Count independent source types, not event volume.</p>
+<p>6. <strong>Verdict.</strong> <code>&gt;=3</code> independent sources -&gt; <code>CONFIRMED</code>; <code>2</code> sources with a strong indicator -&gt; <code>HIGH_CONFIDENCE</code>; otherwise <code>SUSPICIOUS</code>/<code>INCONCLUSIVE</code> with no containment.</p>
+<p>7. <strong>Respond.</strong> Build and seal the evidence package first. Then execute the playbook only with <code>--approve</code> or an interactive <code>y</code>; default is DRY-RUN. Every action is simulated and carries a rollback command.</p>
+
+<h3>3.1 Target identification</h3>
+<p>Target: <code>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</code>. Classification: <strong>RESTRICTED</strong>. Evidence rows: <code>file_activity.csv:2, file_activity.csv:3, file_activity.csv:7, file_activity.csv:8, file_activity.csv:9</code>. The file scored highest because it carries the <code>RESTRICTED</code> label, contains <code>pricing</code>, <code>model</code> and <code>.xlsx</code> tokens, and matches the dictionary target hint. No path or username is hardcoded in the detector.</p>
+
+<h3>3.2 Time normalization evidence</h3>
+<p>The same incident spans different local dates because sources use different zones. Examples:</p>
+
+<table>
+<tr><th>UTC</th><th>Local time</th><th>Source</th><th>Why it matters</th></tr>
+<tr><td>2026-11-18 23:38:05Z</td><td>2026-11-18 18:38:05 -0500</td><td>authentication</td><td>Failed login appears 18:38 EST, still 18 Nov</td></tr>
+<tr><td>2026-11-18 23:55:00Z</td><td>2026-11-19 05:25:00 +0530</td><td>usb</td><td>USB connect appears 19 Nov in IST</td></tr>
+<tr><td>2026-11-19 00:12:00Z</td><td>2026-11-18 16:12:00 -0800</td><td>forensic_artifacts</td><td>Log clear appears 18 Nov in PST</td></tr>
+</table>
+
+<h2>4. Incident narrative</h2>
+
+<p>The following sequence is reconstructed from the linked findings. Times are UTC; the full local-time view is in Appendix A.</p>
+
+<table>
+<tr><th>UTC</th><th>Source</th><th>Event</th><th>Analytic meaning</th><th>Evidence</th></tr>
+<tr><td>2026-11-18 23:38:05</td><td>authentication</td><td>failed_login</td><td>Failed login from 203.0.113.77 on a new device, before the successful session</td><td>authentication.csv:5</td></tr>
+<tr><td>2026-11-18 23:40:27</td><td>authentication</td><td>anomalous_login</td><td>Successful login from the same new device/IP outside normal hours</td><td>authentication.csv:6</td></tr>
+<tr><td>2026-11-18 23:47:33</td><td>file_activity</td><td>restricted read</td><td>Restricted workbook opened by dana.lee on WS-0207</td><td>file_activity.csv:7</td></tr>
+<tr><td>2026-11-18 23:49:10</td><td>file_activity</td><td>restricted copy</td><td>Workbook copied to local Temp as pricing_copy.xlsx</td><td>file_activity.csv:8</td></tr>
+<tr><td>2026-11-18 23:52:18</td><td>file_activity</td><td>archive</td><td>Workbook archived as pricing_export_2026.zip with 7z.exe</td><td>file_activity.csv:9</td></tr>
+<tr><td>2026-11-18 23:55:00</td><td>usb</td><td>unapproved USB connect</td><td>USB-UNK-9F3C mounted on WS-0207</td><td>usb.csv:4</td></tr>
+<tr><td>2026-11-18 23:57:00</td><td>usb</td><td>USB write</td><td>pricing_export_2026.zip written to F:</td><td>usb.csv:5</td></tr>
+<tr><td>2026-11-19 00:03:12</td><td>browser</td><td>cloud visit</td><td>mega.nz cloud-storage page visited</td><td>browser.csv:5</td></tr>
+<tr><td>2026-11-19 00:04:05</td><td>browser</td><td>file-share visit</td><td>wetransfer.com visited</td><td>browser.csv:7</td></tr>
+<tr><td>2026-11-19 00:06:44</td><td>network</td><td>46.0 MB outbound</td><td>Large transfer to mega.nz (203.0.113.200)</td><td>network.csv:4</td></tr>
+<tr><td>2026-11-19 00:08:10</td><td>network</td><td>12.0 MB outbound</td><td>Large transfer to wetransfer.com (203.0.113.201)</td><td>network.csv:6</td></tr>
+<tr><td>2026-11-19 00:12:00</td><td>forensic_artifacts</td><td>log_cleared</td><td>Security log cleared with wevtutil</td><td>forensic_artifacts.csv:2</td></tr>
+<tr><td>2026-11-19 00:14:00</td><td>forensic_artifacts</td><td>timestomp</td><td>SetFileTime on the archive</td><td>forensic_artifacts.csv:3</td></tr>
+<tr><td>2026-11-19 00:14:40</td><td>file_activity</td><td>delete</td><td>Staged copy pricing_copy.xlsx deleted</td><td>file_activity.csv:10</td></tr>
+<tr><td>2026-11-19 00:16:00</td><td>forensic_artifacts</td><td>wipe_tool</td><td>sdelete used on the staged copy</td><td>forensic_artifacts.csv:4</td></tr>
+</table>
+
+<p>The sequence shows a coherent progression: authenticate, access, stage, archive, copy to removable media, upload to cloud, then destroy local traces. The 23:38 failed login is treated as a precursor, not as a separate incident, because it is followed within two minutes by a successful session from the same new device/IP and then by the restricted-file activity.</p>
+
+<h2>5. Technical findings</h2>
+
+<p><strong>27</strong> rule findings were produced: <strong>17 linked to the incident</strong> and <strong>10 classified as decoys</strong>. The linked findings are listed below; the complete set, including decoys, is in Appendix B.</p>
+
+<table>
+<tr><th>ID</th><th>Rule</th><th>Source</th><th>Severity</th><th>UTC</th><th>User</th><th>Host</th><th>Object</th><th>Evidence</th></tr>
+<tr><td>F-007</td><td>failed_login</td><td>authentication</td><td>MEDIUM</td><td>2026-11-18 23:38:05Z</td><td>dana.lee</td><td>WS-0207</td><td>DEV-UNKNOWN-77</td><td>authentication.csv:5</td></tr>
+<tr><td>F-008</td><td>anomalous_login</td><td>authentication</td><td>HIGH</td><td>2026-11-18 23:40:27Z</td><td>dana.lee</td><td>WS-0207</td><td>DEV-UNKNOWN-77</td><td>authentication.csv:6</td></tr>
+<tr><td>F-009</td><td>restricted_file_activity</td><td>file_activity</td><td>MEDIUM</td><td>2026-11-18 23:47:33Z</td><td>dana.lee</td><td>WS-0207</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td><td>file_activity.csv:7</td></tr>
+<tr><td>F-010</td><td>restricted_file_activity</td><td>file_activity</td><td>HIGH</td><td>2026-11-18 23:49:10Z</td><td>dana.lee</td><td>WS-0207</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_copy.xlsx</td><td>file_activity.csv:8</td></tr>
+<tr><td>F-011</td><td>restricted_file_activity</td><td>file_activity</td><td>HIGH</td><td>2026-11-18 23:52:18Z</td><td>dana.lee</td><td>WS-0207</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_export_2026.zip</td><td>file_activity.csv:9</td></tr>
+<tr><td>F-012</td><td>restricted_archive_created</td><td>file_activity</td><td>HIGH</td><td>2026-11-18 23:52:18Z</td><td>dana.lee</td><td>WS-0207</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_export_2026.zip</td><td>file_activity.csv:9</td></tr>
+<tr><td>F-013</td><td>unapproved_usb</td><td>usb</td><td>MEDIUM</td><td>2026-11-18 23:55:00Z</td><td>dana.lee</td><td>WS-0207</td><td>USB-UNK-9F3C</td><td>usb.csv:4</td></tr>
+<tr><td>F-014</td><td>unapproved_usb</td><td>usb</td><td>HIGH</td><td>2026-11-18 23:57:00Z</td><td>dana.lee</td><td>WS-0207</td><td>F:\pricing_export_2026.zip</td><td>usb.csv:5</td></tr>
+<tr><td>F-015</td><td>usb_restricted_copy</td><td>usb</td><td>HIGH</td><td>2026-11-18 23:57:00Z</td><td>dana.lee</td><td>WS-0207</td><td>F:\pricing_export_2026.zip</td><td>usb.csv:5</td></tr>
+<tr><td>F-016</td><td>cloud_file_share_visit</td><td>browser</td><td>MEDIUM</td><td>2026-11-19 00:03:12Z</td><td>dana.lee</td><td>WS-0207</td><td>https://mega.nz/fm/abc123</td><td>browser.csv:5</td></tr>
+<tr><td>F-017</td><td>cloud_file_share_visit</td><td>browser</td><td>MEDIUM</td><td>2026-11-19 00:04:05Z</td><td>dana.lee</td><td>WS-0207</td><td>https://wetransfer.com/</td><td>browser.csv:7</td></tr>
+<tr><td>F-018</td><td>external_large_transfer</td><td>network</td><td>HIGH</td><td>2026-11-19 00:06:44Z</td><td>dana.lee</td><td>WS-0207</td><td>mega.nz</td><td>network.csv:4</td></tr>
+<tr><td>F-019</td><td>external_large_transfer</td><td>network</td><td>HIGH</td><td>2026-11-19 00:08:10Z</td><td>dana.lee</td><td>WS-0207</td><td>wetransfer.com</td><td>network.csv:6</td></tr>
+<tr><td>F-020</td><td>anti_forensics</td><td>forensic_artifacts</td><td>HIGH</td><td>2026-11-19 00:12:00Z</td><td>dana.lee</td><td>WS-0207</td><td>wevtutil cl Security (Security log cleared)</td><td>forensic_artifacts.csv:2</td></tr>
+<tr><td>F-021</td><td>anti_forensics</td><td>forensic_artifacts</td><td>HIGH</td><td>2026-11-19 00:14:00Z</td><td>dana.lee</td><td>WS-0207</td><td>SetFileTime on pricing_export_2026.zip</td><td>forensic_artifacts.csv:3</td></tr>
+<tr><td>F-022</td><td>evidence_cleanup</td><td>file_activity</td><td>MEDIUM</td><td>2026-11-19 00:14:40Z</td><td>dana.lee</td><td>WS-0207</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_copy.xlsx</td><td>file_activity.csv:10</td></tr>
+<tr><td>F-023</td><td>anti_forensics</td><td>forensic_artifacts</td><td>HIGH</td><td>2026-11-19 00:16:00Z</td><td>dana.lee</td><td>WS-0207</td><td>sdelete -p 3 pricing_copy.xlsx</td><td>forensic_artifacts.csv:4</td></tr>
+</table>
+
+<h3>5.1 Independent source corroboration</h3>
+<table>
+<tr><th>Source</th><th>Linked events</th><th>Evidence IDs</th><th>Rules</th></tr>
+<tr><td>authentication</td><td>2</td><td>authentication.csv:5, authentication.csv:6</td><td>anomalous_login; failed_login</td></tr>
+<tr><td>browser</td><td>2</td><td>browser.csv:5, browser.csv:7</td><td>cloud_file_share_visit</td></tr>
+<tr><td>file_activity</td><td>5</td><td>file_activity.csv:10, file_activity.csv:7, file_activity.csv:8, file_activity.csv:9</td><td>evidence_cleanup; restricted_archive_created; restricted_file_activity</td></tr>
+<tr><td>forensic_artifacts</td><td>3</td><td>forensic_artifacts.csv:2, forensic_artifacts.csv:3, forensic_artifacts.csv:4</td><td>anti_forensics</td></tr>
+<tr><td>network</td><td>2</td><td>network.csv:4, network.csv:6</td><td>external_large_transfer</td></tr>
+<tr><td>usb</td><td>3</td><td>usb.csv:4, usb.csv:5</td><td>unapproved_usb; usb_restricted_copy</td></tr>
+</table>
+
+<p><strong>Independent source count: 6.</strong> The threshold for CONFIRMED is three. This case exceeds it by three sources. The count uses distinct source types, not the number of rows; duplicate exports and repeated events do not inflate confidence.</p>
+
+<h3>5.2 Strong indicators</h3>
+<ul>
+<li>Archive creation from the restricted workbook (<code>7z.exe</code>) and a USB write of the resulting archive.</li>
+<li>Two external large transfers to cloud/file-share destinations immediately after the USB copy.</li>
+<li>New-device/new-IP authentication and a failed login immediately before success.</li>
+<li>Anti-forensic log clearing, timestomping and secure deletion on the same endpoint.</li>
+</ul>
+
+<h3>5.3 Indicators of compromise</h3>
+<table>
+<tr><th>Indicator type</th><th>Value</th></tr>
+<tr><td>Account</td><td>dana.lee (variants: Dana.Lee , DANA.LEE )</td></tr>
+<tr><td>Endpoint</td><td>WS-0207</td></tr>
+<tr><td>Restricted file</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td></tr>
+<tr><td>Staged copies</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_copy.xlsx; pricing_export_2026.zip</td></tr>
+<tr><td>USB device</td><td>USB-UNK-9F3C (not on approved list)</td></tr>
+<tr><td>Cloud destinations</td><td>mega.nz; wetransfer.com</td></tr>
+<tr><td>Network indicators</td><td>203.0.113.77 (auth source); 203.0.113.200 / 203.0.113.201 (destinations)</td></tr>
+<tr><td>Anti-forensic tools</td><td>wevtutil; PowerShell SetFileTime; sdelete; 7z.exe</td></tr>
+<tr><td>Time window (UTC)</td><td>2026-11-18 23:38:05Z to 2026-11-19 00:16:00Z</td></tr>
+</table>
+
+<h2>6. Decoys and alternative hypotheses</h2>
+
+<p>Every plausible benign explanation was explicitly tested. Decoy findings are excluded from the verdict and are not counted as independent sources.</p>
+
+<table>
+<tr><th>Account</th><th>Observed</th><th>Why it is NOT the incident</th><th>Evidence IDs</th></tr>
+<tr><td>maria.gomez</td><td>cloud_file_share_visit</td><td>Cloud/file-share browsing without any restricted-file access or external transfer by this account</td><td>browser.csv:2</td></tr>
+<tr><td>alice.chen</td><td>restricted_file_activity</td><td>Authorised pricing analyst, business hours, read-only, no USB/network exfiltration</td><td>file_activity.csv:2, file_activity.csv:3</td></tr>
+<tr><td>alice.chen</td><td>cloud_file_share_visit</td><td>Cloud/file-share browsing without any restricted-file access or external transfer by this account</td><td>browser.csv:3</td></tr>
+<tr><td>bob.martin</td><td>approved_usb_write</td><td>Approved USB device on the corporate allow-list; non-restricted file</td><td>usb.csv:2, usb.csv:3</td></tr>
+<tr><td>svc_backup</td><td>bulk_backup, large_internal_transfer, scheduled_log_rotation, service_login</td><td>Scheduled service account / approved backup job to internal backup destination</td><td>authentication.csv:8, file_activity.csv:11, forensic_artifacts.csv:5, network.csv:7</td></tr>
+</table>
+
+<h3>6.1 Alternative hypotheses</h3>
+<table>
+<tr><th>Hypothesis</th><th>Disposition</th><th>Reasoning</th><th>Evidence</th></tr>
+<tr><td>Authorised analyst doing normal pricing review</td><td>Rejected</td><td>alice.chen is the authorised pricing analyst; access was business-hours and read-only with no USB/network egress. dana.lee is not on the allow-list and performed copy/archive/USB/cloud actions.</td><td>F-002..F-004</td></tr>
+<tr><td>Scheduled backup job</td><td>Rejected</td><td>svc_backup copied finance data at 02:00 UTC to backup.acme-internal.com over internal SMB. Separate account/host, scheduled, internal destination.</td><td>F-024..F-026</td></tr>
+<tr><td>Approved USB use</td><td>Rejected</td><td>bob.martin used USB-APPR-1140 for a non-restricted roadmap file during business hours. dana.lee used unapproved USB-UNK-9F3C for the restricted archive.</td><td>F-005..F-006, F-013..F-015</td></tr>
+<tr><td>Benign cloud synchronisation</td><td>Rejected</td><td>Cloud visits were followed by 46 MB and 12 MB outbound transfers to mega.nz/wetransfer.com, immediately after the archive and USB copy.</td><td>F-016..F-019</td></tr>
+<tr><td>Routine log maintenance</td><td>Rejected</td><td>svc_backup logrotate on SRV-BACKUP01 at 00:00 America/Los_Angeles is scheduled and outside the incident host. dana.lee cleared Security logs on WS-0207 inside the window.</td><td>F-020, F-027</td></tr>
+<tr><td>Compromised credentials / account takeover</td><td>Unresolved</td><td>The account used a new device and new IP. Logs cannot distinguish an insider from an external actor using stolen credentials; identity attribution requires EDR, VPN, MFA and HR evidence.</td><td>Gap</td></tr>
+</table>
+
+<p>The compromised-credentials hypothesis is deliberately left unresolved. The logs establish what the account did, not who was at the keyboard. Resolving it requires MFA logs, VPN/ZTNA telemetry, EDR process ancestry, badge/HR records and, if appropriate, an interview.</p>
+
+<h2>7. Verdict and confidence</h2>
+
+<p><strong>Verdict: CONFIRMED.</strong> Six independent source types (authentication, file_activity, usb, browser, network, forensic_artifacts) corroborate the same account <code>dana.lee</code>, endpoint <code>WS-0207</code> and restricted file <code>FY26_Pricing_Model_RESTRICTED.xlsx</code> within the window. Multiple strong indicators are present, including archive creation, unapproved USB write, external large transfers and anti-forensics.</p>
+
+<table>
+<tr><th>Question</th><th>Finding</th></tr>
+<tr><td><strong>Who</strong></td><td>Account <code>dana.lee</code> on endpoint <code>WS-0207</code>. Identity attribution beyond the account is unresolved.</td></tr>
+<tr><td><strong>What</strong></td><td>Restricted workbook <code>FY26_Pricing_Model_RESTRICTED.xlsx</code> read, copied, archived, written to unapproved USB, and uploaded to external cloud/file-share services.</td></tr>
+<tr><td><strong>When</strong></td><td>2026-11-18 23:38:05Z to 2026-11-19 00:16:00Z UTC.</td></tr>
+<tr><td><strong>How</strong></td><td>USB copy + cloud upload via mega.nz, wetransfer.com, USB-UNK-9F3C.</td></tr>
+<tr><td><strong>Confidence</strong></td><td>CONFIRMED under the &gt;=3-source rule; 6 sources and strong indicators.</td></tr>
+</table>
+
+<p><strong>Confidence boundary.</strong> Confidence in the observed activity is high because six independent sources agree and the sequence is internally consistent. Confidence in intent and actor identity is lower: the evidence cannot distinguish insider theft from account takeover, and it cannot confirm that the destination received or opened the archive.</p>
+
+<h2>8. Response actions and rollback</h2>
+
+<p><strong>Ordering control:</strong> the evidence package was created and hashed before any containment record. <code>respond.execute_playbook()</code> refuses to run if the package is absent or if integrity failed.</p>
+
+<p><strong>Mode:</strong> executed with <code>--approve</code>; all adapters are <strong>simulated</strong>. No real endpoint, account, firewall or USB policy was changed. Incident record: <code>INC-4613</code> (<code>incident_INC-4613.json</code>).</p>
+
+<table>
+<tr><th>#</th><th>Action</th><th>Target</th><th>Status</th><th>Rollback</th></tr>
+<tr><td>A-01</td><td>isolate_endpoint</td><td>WS-0207</td><td>SIMULATED_OK</td><td>unisolate_endpoint(host=&#x27;WS-0207&#x27;)</td></tr>
+<tr><td>A-02</td><td>revoke_sessions</td><td>dana.lee</td><td>SIMULATED_OK</td><td>restore_sessions(user=&#x27;dana.lee&#x27;)</td></tr>
+<tr><td>A-03</td><td>disable_account</td><td>dana.lee</td><td>SIMULATED_OK</td><td>enable_account(user=&#x27;dana.lee&#x27;)</td></tr>
+<tr><td>A-04</td><td>block_destination</td><td>mega.nz</td><td>SIMULATED_OK</td><td>unblock_destination(domain=&#x27;mega.nz&#x27;)</td></tr>
+<tr><td>A-05</td><td>block_destination</td><td>wetransfer.com</td><td>SIMULATED_OK</td><td>unblock_destination(domain=&#x27;wetransfer.com&#x27;)</td></tr>
+<tr><td>A-06</td><td>block_usb</td><td>USB-UNK-9F3C</td><td>SIMULATED_OK</td><td>unblock_usb(device_id=&#x27;USB-UNK-9F3C&#x27;)</td></tr>
+<tr><td>A-07</td><td>open_incident_record</td><td>INC-4613</td><td>SIMULATED_OK</td><td>close_incident(incident_id=&#x27;INC-4613&#x27;)</td></tr>
+</table>
+
+<p><strong>Approval gate.</strong> The default is DRY-RUN. Execution requires <code>--approve</code> or an interactive <code>y</code>. Actions that could alter evidence or production state are refused when preservation or integrity fails. The package SHA-256 is embedded in every action record for traceability.</p>
+
+<h2>9. Recommendations</h2>
+
+<h3>9.1 Immediate (0-24 hours)</h3>
+<ul>
+<li>Preserve the endpoint before remediation: memory image, disk image, EDR process tree, USB device history, browser downloads and cloud session artefacts.</li>
+<li>Confirm whether the USB device is physically available and whether the archive or copies exist on it.</li>
+<li>Reset the account password, revoke all sessions/tokens (simulated here), and review MFA enrollment and recovery methods.</li>
+<li>Notify the data owner, Legal/Privacy and HR; determine contractual and regulatory notification obligations.</li>
+<li>Block <code>mega.nz</code> and <code>wetransfer.com</code> at egress and deny <code>USB-UNK-9F3C</code> by device control (simulated here).</li>
+<li>Review cloud-provider logs for the two destinations if lawful access is available; do not rely on the endpoint alone.</li>
+</ul>
+
+<h3>9.2 Short term (1-7 days)</h3>
+<ul>
+<li>Add a high-severity alert for the sequence: restricted-file read -&gt; archive -&gt; unapproved USB -&gt; cloud domain -&gt; large outbound transfer within 30 minutes.</li>
+<li>Enforce least privilege on the restricted finance share; separate pricing access from general finance access.</li>
+<li>Validate that log clearing and timestomping generate immutable, forwarded alerts (e.g., WEF/syslog) so endpoint log deletion does not erase the evidence trail.</li>
+<li>Review backup service-account scope and ensure backup destinations cannot be repurposed for interactive exfiltration.</li>
+<li>Verify that DLP covers archive creation and removable media, not only raw file copies.</li>
+</ul>
+
+<h3>9.3 Long term</h3>
+<ul>
+<li>Move from threshold rules to behaviour analytics for account/endpoint/file triples, while keeping the explainable rules as a baseline.</li>
+<li>Sign the evidence manifest with an external key and store the signature separately from the evidence.</li>
+<li>Re-seal or append a signed delta to the custody log after response actions; the current package is a point-in-time snapshot.</li>
+<li>Run tabletop exercises for USB and cloud exfiltration, including legal/HR hand-offs and chain-of-custody rehearsal.</li>
+</ul>
+
+<h2>10. Assumptions and limitations</h2>
+
+<h3>10.1 Assumptions</h3>
+<ul>
+<li>The target was identified from the data by classification and filename heuristics plus the dictionary hint, not by a hardcoded path.</li>
+<li>Naive timestamps are local to the timezone declared in the data dictionary; timezone-aware values are converted directly. Local times are retained for readability.</li>
+<li>Exact duplicate rows are export artefacts and are counted once. Corroboration counts source types, not volume.</li>
+<li>&#x27;External&#x27; means a non-internal domain/IP outside the approved SaaS/backup allow-list. Domain attribution comes from the log; DNS was not independently resolved.</li>
+<li>The manifest is treated as the trust anchor for this exercise.</li>
+</ul>
+
+<h3>10.2 Limitations and gaps</h3>
+<ul>
+<li><strong>Synthetic evidence:</strong> the fixture demonstrates method and controls, not a real breach.</li>
+<li><strong>No content inspection:</strong> the logs do not show what was inside the archive, whether it was encrypted, or whether the destination received/opened it.</li>
+<li><strong>No endpoint telemetry:</strong> process ancestry, injected code, clipboard, screen capture and memory artefacts are unavailable.</li>
+<li><strong>Identity attribution:</strong> insider versus compromised credentials cannot be determined from these logs.</li>
+<li><strong>Time zone fallback:</strong> if the host lacks IANA tzdata, the code falls back to the fixed offsets declared in the dictionary; DST transitions would then need manual review.</li>
+<li><strong>Correlation window:</strong> the three-hour window around the first restricted-file event is a design choice. A patient actor spacing actions wider would reduce the source count and lower confidence.</li>
+<li><strong>Manifest trust:</strong> if the manifest and data share a compromised source, hashes alone do not establish provenance. Sign the manifest externally in production.</li>
+<li><strong>Custody start:</strong> the chain starts at preservation, not acquisition; it proves post-collection integrity, not who collected the data before this tool ran.</li>
+<li><strong>Point-in-time package:</strong> response entries are appended to the live custody log after the package is sealed. A production workflow should re-package or append a signed delta.</li>
+<li><strong>No legal conclusion:</strong> this is a technical report, not a legal finding of guilt or attribution.</li>
+</ul>
+
+<h2>11. Reproducibility and test evidence</h2>
+
+<p><strong>Environment:</strong> Python 3.10+, pandas, standard library only. No network calls, credentials or real systems.</p>
+
+<p><code>`</code>bash</p>
+<p>python run.py --data ./data            # verify + analyse + DRY-RUN</p>
+<p>python run.py --data ./data --approve  # execute SIMULATED containment</p>
+<p>python tests.py                        # regression tests</p>
+<p><code>`</code></p>
+
+<p><strong>Regression tests (last run: 5 tests, OK):</strong></p>
+
+<table>
+<tr><th>Test</th><th>What it proves</th></tr>
+<tr><td><code>test_tampered_hash_detected_and_excluded</code></td><td>A one-byte change to <code>browser.csv</code> is marked UNTRUSTED, excluded from the timeline/findings, and the custody chain remains valid.</td></tr>
+<tr><td><code>test_decoys_not_flagged</code></td><td>Authorised user, approved USB, scheduled backup and benign cloud browse are decoys, not linked to the verdict.</td></tr>
+<tr><td><code>test_verdict_requires_three_sources_for_confirmed</code></td><td>Three sources -&gt; CONFIRMED; two strong sources -&gt; HIGH_CONFIDENCE; two weak sources -&gt; SUSPICIOUS; none -&gt; INCONCLUSIVE.</td></tr>
+<tr><td><code>test_containment_refused_without_package</code></td><td>No <code>actions.jsonl</code> is written when the evidence package is missing.</td></tr>
+<tr><td><code>test_end_to_end_package_then_actions</code></td><td>Package -&gt; actions -&gt; incident ordering, zip contents, sidecar hash, rollback presence, and <code>block_usb</code> targeting <code>USB-UNK-9F3C</code>.</td></tr>
+</table>
+
+<p><strong>Tamper demonstration.</strong> A temporary copy of the data with one appended newline to <code>browser.csv</code> produced <code>UNTRUSTED browser.csv</code>, <code>integrity_ok=False</code>, and <code>Response=REFUSED</code>; no incident record was created. The real run remains fully trusted.</p>
+
+<h2>12. Appendices</h2>
+
+<h3>Appendix A - Full merged timeline</h3>
+<p>34 de-duplicated events. <code>time_local</code> is the source-local time; <code>source_tz</code> identifies the zone.</p>
+
+<table>
+<tr><th>UTC</th><th>Local</th><th>Source</th><th>User</th><th>Host</th><th>Event</th><th>Object</th><th>Evidence ID</th></tr>
+<tr><td>2026-11-18 13:55:12Z</td><td>2026-11-18 08:55:12 -0500</td><td>authentication</td><td>alice.chen</td><td>WS-0142</td><td>login</td><td>DEV-ALICE-01</td><td>authentication.csv:2</td></tr>
+<tr><td>2026-11-18 14:02:44Z</td><td>2026-11-18 09:02:44 -0500</td><td>authentication</td><td>maria.gomez</td><td>WS-0188</td><td>login</td><td>DEV-MARIA-01</td><td>authentication.csv:3</td></tr>
+<tr><td>2026-11-18 14:10:03Z</td><td>2026-11-18 09:10:03 -0500</td><td>authentication</td><td>bob.martin</td><td>WS-0207</td><td>login</td><td>DEV-BOB-01</td><td>authentication.csv:4</td></tr>
+<tr><td>2026-11-18 14:30:00Z</td><td>2026-11-18 14:30:00 +0000</td><td>browser</td><td>maria.gomez</td><td>WS-0188</td><td>nan</td><td>https://onedrive.live.com/</td><td>browser.csv:2</td></tr>
+<tr><td>2026-11-18 15:10:22Z</td><td>2026-11-18 15:10:22 +0000</td><td>file_activity</td><td>alice.chen</td><td>WS-0142</td><td>read</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td><td>file_activity.csv:2</td></tr>
+<tr><td>2026-11-18 15:12:00Z</td><td>2026-11-18 15:12:00 +0000</td><td>network</td><td>alice.chen</td><td>WS-0142</td><td>nan</td><td>sharepoint.com</td><td>network.csv:2</td></tr>
+<tr><td>2026-11-18 15:20:00Z</td><td>2026-11-18 15:20:00 +0000</td><td>browser</td><td>alice.chen</td><td>WS-0142</td><td>nan</td><td>https://outlook.office.com/mail/</td><td>browser.csv:3</td></tr>
+<tr><td>2026-11-18 15:42:10Z</td><td>2026-11-18 15:42:10 +0000</td><td>file_activity</td><td>alice.chen</td><td>WS-0142</td><td>read</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td><td>file_activity.csv:3</td></tr>
+<tr><td>2026-11-18 16:00:00Z</td><td>2026-11-18 16:00:00 +0000</td><td>browser</td><td>bob.martin</td><td>WS-0207</td><td>nan</td><td>https://github.com/</td><td>browser.csv:4</td></tr>
+<tr><td>2026-11-18 16:05:00Z</td><td>2026-11-18 16:05:00 +0000</td><td>file_activity</td><td>bob.martin</td><td>WS-0207</td><td>read</td><td>\\fileserver\public\Q4_roadmap.pptx</td><td>file_activity.csv:5</td></tr>
+<tr><td>2026-11-18 16:10:00Z</td><td>2026-11-18 16:10:00 +0000</td><td>network</td><td>bob.martin</td><td>WS-0207</td><td>nan</td><td>github.com</td><td>network.csv:3</td></tr>
+<tr><td>2026-11-18 16:20:00Z</td><td>2026-11-18 16:20:00 +0000</td><td>file_activity</td><td>bob.martin</td><td>WS-0207</td><td>copy</td><td>E:\Q4_roadmap.pptx</td><td>file_activity.csv:6</td></tr>
+<tr><td>2026-11-18 16:24:30Z</td><td>2026-11-18 21:54:30 +0530</td><td>usb</td><td>bob.martin</td><td>WS-0207</td><td>connect</td><td>USB-APPR-1140</td><td>usb.csv:3</td></tr>
+<tr><td>2026-11-18 16:25:00Z</td><td>2026-11-18 21:55:00 +0530</td><td>usb</td><td>bob.martin</td><td>WS-0207</td><td>write</td><td>E:\Q4_roadmap.pptx</td><td>usb.csv:2</td></tr>
+<tr><td>2026-11-18 23:38:05Z</td><td>2026-11-18 18:38:05 -0500</td><td>authentication</td><td>dana.lee</td><td>WS-0207</td><td>failed_login</td><td>DEV-UNKNOWN-77</td><td>authentication.csv:5</td></tr>
+<tr><td>2026-11-18 23:40:27Z</td><td>2026-11-18 18:40:27 -0500</td><td>authentication</td><td>dana.lee</td><td>WS-0207</td><td>login</td><td>DEV-UNKNOWN-77</td><td>authentication.csv:6</td></tr>
+<tr><td>2026-11-18 23:47:33Z</td><td>2026-11-18 23:47:33 +0000</td><td>file_activity</td><td>dana.lee</td><td>WS-0207</td><td>read</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td><td>file_activity.csv:7</td></tr>
+<tr><td>2026-11-18 23:49:10Z</td><td>2026-11-18 23:49:10 +0000</td><td>file_activity</td><td>dana.lee</td><td>WS-0207</td><td>copy</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_copy.xlsx</td><td>file_activity.csv:8</td></tr>
+<tr><td>2026-11-18 23:52:18Z</td><td>2026-11-18 23:52:18 +0000</td><td>file_activity</td><td>dana.lee</td><td>WS-0207</td><td>archive</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_export_2026.zip</td><td>file_activity.csv:9</td></tr>
+<tr><td>2026-11-18 23:55:00Z</td><td>2026-11-19 05:25:00 +0530</td><td>usb</td><td>dana.lee</td><td>WS-0207</td><td>connect</td><td>USB-UNK-9F3C</td><td>usb.csv:4</td></tr>
+<tr><td>2026-11-18 23:57:00Z</td><td>2026-11-19 05:27:00 +0530</td><td>usb</td><td>dana.lee</td><td>WS-0207</td><td>write</td><td>F:\pricing_export_2026.zip</td><td>usb.csv:5</td></tr>
+<tr><td>2026-11-19 00:01:00Z</td><td>2026-11-19 05:31:00 +0530</td><td>usb</td><td>dana.lee</td><td>WS-0207</td><td>disconnect</td><td>USB-UNK-9F3C</td><td>usb.csv:6</td></tr>
+<tr><td>2026-11-19 00:03:12Z</td><td>2026-11-19 00:03:12 +0000</td><td>browser</td><td>dana.lee</td><td>WS-0207</td><td>nan</td><td>https://mega.nz/fm/abc123</td><td>browser.csv:5</td></tr>
+<tr><td>2026-11-19 00:04:05Z</td><td>2026-11-19 00:04:05 +0000</td><td>browser</td><td>dana.lee</td><td>WS-0207</td><td>nan</td><td>https://wetransfer.com/</td><td>browser.csv:7</td></tr>
+<tr><td>2026-11-19 00:06:44Z</td><td>2026-11-19 00:06:44 +0000</td><td>network</td><td>dana.lee</td><td>WS-0207</td><td>nan</td><td>mega.nz</td><td>network.csv:4</td></tr>
+<tr><td>2026-11-19 00:08:10Z</td><td>2026-11-19 00:08:10 +0000</td><td>network</td><td>dana.lee</td><td>WS-0207</td><td>nan</td><td>wetransfer.com</td><td>network.csv:6</td></tr>
+<tr><td>2026-11-19 00:12:00Z</td><td>2026-11-18 16:12:00 -0800</td><td>forensic_artifacts</td><td>dana.lee</td><td>WS-0207</td><td>nan</td><td>wevtutil cl Security (Security log cleared)</td><td>forensic_artifacts.csv:2</td></tr>
+<tr><td>2026-11-19 00:14:00Z</td><td>2026-11-18 16:14:00 -0800</td><td>forensic_artifacts</td><td>dana.lee</td><td>WS-0207</td><td>nan</td><td>SetFileTime on pricing_export_2026.zip</td><td>forensic_artifacts.csv:3</td></tr>
+<tr><td>2026-11-19 00:14:40Z</td><td>2026-11-19 00:14:40 +0000</td><td>file_activity</td><td>dana.lee</td><td>WS-0207</td><td>delete</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_copy.xlsx</td><td>file_activity.csv:10</td></tr>
+<tr><td>2026-11-19 00:16:00Z</td><td>2026-11-18 16:16:00 -0800</td><td>forensic_artifacts</td><td>dana.lee</td><td>WS-0207</td><td>nan</td><td>sdelete -p 3 pricing_copy.xlsx</td><td>forensic_artifacts.csv:4</td></tr>
+<tr><td>2026-11-19 02:00:00Z</td><td>2026-11-18 21:00:00 -0500</td><td>authentication</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>service_login</td><td>SRV-BACKUP01</td><td>authentication.csv:8</td></tr>
+<tr><td>2026-11-19 02:00:00Z</td><td>2026-11-19 02:00:00 +0000</td><td>file_activity</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>backup</td><td>\\backup\daily\finance_20261119</td><td>file_activity.csv:11</td></tr>
+<tr><td>2026-11-19 02:00:00Z</td><td>2026-11-19 02:00:00 +0000</td><td>network</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>nan</td><td>backup.acme-internal.com</td><td>network.csv:7</td></tr>
+<tr><td>2026-11-19 08:00:00Z</td><td>2026-11-19 00:00:00 -0800</td><td>forensic_artifacts</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>nan</td><td>scheduled log rotation (retention policy)</td><td>forensic_artifacts.csv:5</td></tr>
+</table>
+
+<h3>Appendix B - Full findings register</h3>
+<p>27 findings, including decoys. Disposition is LINKED (counted toward the verdict) or DECOY (excluded).</p>
+
+<table>
+<tr><th>ID</th><th>Rule</th><th>Source</th><th>Severity</th><th>User</th><th>Host</th><th>UTC</th><th>Object</th><th>Evidence</th><th>Disposition</th></tr>
+<tr><td>F-001</td><td>cloud_file_share_visit</td><td>browser</td><td>MEDIUM</td><td>maria.gomez</td><td>WS-0188</td><td>2026-11-18 14:30:00Z</td><td>https://onedrive.live.com/</td><td>browser.csv:2</td><td>DECOY</td></tr>
+<tr><td>F-002</td><td>restricted_file_activity</td><td>file_activity</td><td>MEDIUM</td><td>alice.chen</td><td>WS-0142</td><td>2026-11-18 15:10:22Z</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td><td>file_activity.csv:2</td><td>DECOY</td></tr>
+<tr><td>F-003</td><td>cloud_file_share_visit</td><td>browser</td><td>MEDIUM</td><td>alice.chen</td><td>WS-0142</td><td>2026-11-18 15:20:00Z</td><td>https://outlook.office.com/mail/</td><td>browser.csv:3</td><td>DECOY</td></tr>
+<tr><td>F-004</td><td>restricted_file_activity</td><td>file_activity</td><td>MEDIUM</td><td>alice.chen</td><td>WS-0142</td><td>2026-11-18 15:42:10Z</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td><td>file_activity.csv:3</td><td>DECOY</td></tr>
+<tr><td>F-005</td><td>approved_usb_write</td><td>usb</td><td>LOW</td><td>bob.martin</td><td>WS-0207</td><td>2026-11-18 16:24:30Z</td><td>USB-APPR-1140</td><td>usb.csv:3</td><td>DECOY</td></tr>
+<tr><td>F-006</td><td>approved_usb_write</td><td>usb</td><td>LOW</td><td>bob.martin</td><td>WS-0207</td><td>2026-11-18 16:25:00Z</td><td>E:\Q4_roadmap.pptx</td><td>usb.csv:2</td><td>DECOY</td></tr>
+<tr><td>F-007</td><td>failed_login</td><td>authentication</td><td>MEDIUM</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:38:05Z</td><td>DEV-UNKNOWN-77</td><td>authentication.csv:5</td><td>LINKED</td></tr>
+<tr><td>F-008</td><td>anomalous_login</td><td>authentication</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:40:27Z</td><td>DEV-UNKNOWN-77</td><td>authentication.csv:6</td><td>LINKED</td></tr>
+<tr><td>F-009</td><td>restricted_file_activity</td><td>file_activity</td><td>MEDIUM</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:47:33Z</td><td>\\fileserver\finance\Restricted\FY26_Pricing_Model_RESTRICTED.xlsx</td><td>file_activity.csv:7</td><td>LINKED</td></tr>
+<tr><td>F-010</td><td>restricted_file_activity</td><td>file_activity</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:49:10Z</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_copy.xlsx</td><td>file_activity.csv:8</td><td>LINKED</td></tr>
+<tr><td>F-011</td><td>restricted_file_activity</td><td>file_activity</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:52:18Z</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_export_2026.zip</td><td>file_activity.csv:9</td><td>LINKED</td></tr>
+<tr><td>F-012</td><td>restricted_archive_created</td><td>file_activity</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:52:18Z</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_export_2026.zip</td><td>file_activity.csv:9</td><td>LINKED</td></tr>
+<tr><td>F-013</td><td>unapproved_usb</td><td>usb</td><td>MEDIUM</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:55:00Z</td><td>USB-UNK-9F3C</td><td>usb.csv:4</td><td>LINKED</td></tr>
+<tr><td>F-014</td><td>unapproved_usb</td><td>usb</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:57:00Z</td><td>F:\pricing_export_2026.zip</td><td>usb.csv:5</td><td>LINKED</td></tr>
+<tr><td>F-015</td><td>usb_restricted_copy</td><td>usb</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-18 23:57:00Z</td><td>F:\pricing_export_2026.zip</td><td>usb.csv:5</td><td>LINKED</td></tr>
+<tr><td>F-016</td><td>cloud_file_share_visit</td><td>browser</td><td>MEDIUM</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:03:12Z</td><td>https://mega.nz/fm/abc123</td><td>browser.csv:5</td><td>LINKED</td></tr>
+<tr><td>F-017</td><td>cloud_file_share_visit</td><td>browser</td><td>MEDIUM</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:04:05Z</td><td>https://wetransfer.com/</td><td>browser.csv:7</td><td>LINKED</td></tr>
+<tr><td>F-018</td><td>external_large_transfer</td><td>network</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:06:44Z</td><td>mega.nz</td><td>network.csv:4</td><td>LINKED</td></tr>
+<tr><td>F-019</td><td>external_large_transfer</td><td>network</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:08:10Z</td><td>wetransfer.com</td><td>network.csv:6</td><td>LINKED</td></tr>
+<tr><td>F-020</td><td>anti_forensics</td><td>forensic_artifacts</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:12:00Z</td><td>wevtutil cl Security (Security log cleared)</td><td>forensic_artifacts.csv:2</td><td>LINKED</td></tr>
+<tr><td>F-021</td><td>anti_forensics</td><td>forensic_artifacts</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:14:00Z</td><td>SetFileTime on pricing_export_2026.zip</td><td>forensic_artifacts.csv:3</td><td>LINKED</td></tr>
+<tr><td>F-022</td><td>evidence_cleanup</td><td>file_activity</td><td>MEDIUM</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:14:40Z</td><td>C:\Users\dana.lee\AppData\Local\Temp\pricing_copy.xlsx</td><td>file_activity.csv:10</td><td>LINKED</td></tr>
+<tr><td>F-023</td><td>anti_forensics</td><td>forensic_artifacts</td><td>HIGH</td><td>dana.lee</td><td>WS-0207</td><td>2026-11-19 00:16:00Z</td><td>sdelete -p 3 pricing_copy.xlsx</td><td>forensic_artifacts.csv:4</td><td>LINKED</td></tr>
+<tr><td>F-024</td><td>service_login</td><td>authentication</td><td>LOW</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>2026-11-19 02:00:00Z</td><td>SRV-BACKUP01</td><td>authentication.csv:8</td><td>DECOY</td></tr>
+<tr><td>F-025</td><td>bulk_backup</td><td>file_activity</td><td>LOW</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>2026-11-19 02:00:00Z</td><td>\\backup\daily\finance_20261119</td><td>file_activity.csv:11</td><td>DECOY</td></tr>
+<tr><td>F-026</td><td>large_internal_transfer</td><td>network</td><td>LOW</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>2026-11-19 02:00:00Z</td><td>backup.acme-internal.com</td><td>network.csv:7</td><td>DECOY</td></tr>
+<tr><td>F-027</td><td>scheduled_log_rotation</td><td>forensic_artifacts</td><td>LOW</td><td>svc_backup</td><td>SRV-BACKUP01</td><td>2026-11-19 08:00:00Z</td><td>scheduled log rotation (retention policy)</td><td>forensic_artifacts.csv:5</td><td>DECOY</td></tr>
+</table>
+
+<h3>Appendix C - Chain of custody entries</h3>
+<p>26 entries; chain verification: (True, &#x27;chain valid&#x27;).</p>
+
+<table>
+<tr><th>Timestamp</th><th>Actor</th><th>Action</th><th>File</th><th>SHA-256</th><th>Prev hash</th></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>authentication.csv</td><td>446a08b7085caa2517f6</td><td>GENESIS</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>authentication.csv</td><td>446a08b7085caa2517f6</td><td>ffcc2b61dc12dc286775</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>browser.csv</td><td>79c906f9b1c5d2c5abd9</td><td>dfd1b9aa9fddfe800b53</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>browser.csv</td><td>79c906f9b1c5d2c5abd9</td><td>68048221b6b4d89dda9d</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>data_dictionary.md</td><td>585bb2b0ecc2f5cb1932</td><td>56d3830f86bf5e4c21db</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>data_dictionary.md</td><td>585bb2b0ecc2f5cb1932</td><td>f703441f1f3e1a20e674</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>evidence_manifest.csv</td><td>eba7c864dc21f47d6eec</td><td>e8fc77274212d6a482ac</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>evidence_manifest.csv</td><td>eba7c864dc21f47d6eec</td><td>e14cf200809fb8b5b867</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>file_activity.csv</td><td>4ab2e1807eebec01f29a</td><td>b7e98c8e5eb2b9fd51a6</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>file_activity.csv</td><td>4ab2e1807eebec01f29a</td><td>8a28b7fad5823907d789</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>forensic_artifacts.csv</td><td>5a292bb315114264765b</td><td>d955cfba2fb8b7e63ef2</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>forensic_artifacts.csv</td><td>5a292bb315114264765b</td><td>8a49ffc21820a8d157ee</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>network.csv</td><td>e6fe8f3a18434151eb5f</td><td>2956f9de75f36299b240</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>network.csv</td><td>e6fe8f3a18434151eb5f</td><td>a8a5ffe73b83a40b022d</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preserve_copy</td><td>usb.csv</td><td>d2ff624607e86e7bb8a1</td><td>edfc544cb0058262ab83</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>verify_hash</td><td>usb.csv</td><td>d2ff624607e86e7bb8a1</td><td>063c0a639b8ecf7ef337</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:preservation</td><td>preservation_summary</td><td></td><td></td><td>144da1a7bdace67c18ca</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>system:packaging</td><td>evidence_package_created</td><td>evidence_package.zip</td><td>f980fc3b95e818b111c8</td><td>189e1f81615c8348595f</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>response:isolate_endpoint</td><td>WS-0207</td><td></td><td>abfde8925e3fae03237d</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>response:revoke_sessions</td><td>dana.lee</td><td></td><td>e6ba97a288b3ca625663</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>response:disable_account</td><td>dana.lee</td><td></td><td>7674a87e412d3d411033</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>response:block_destination</td><td>mega.nz</td><td></td><td>77078ed72bc7021530d0</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>response:block_destination</td><td>wetransfer.com</td><td></td><td>02cb6943d71921d947f5</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>response:block_usb</td><td>USB-UNK-9F3C</td><td></td><td>4078fbff198190c3d846</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>response:open_incident_record</td><td>INC-4613</td><td></td><td>15e5b1fc8a72caeeee9d</td></tr>
+<tr><td>2026-11-20T09:47:26Z</td><td>analyst:cli</td><td>incident_record_created</td><td>incident_INC-4613.json</td><td>4263f7a531177ef15fd9</td><td>74dd9532f423d5237de5</td></tr>
+</table>
+
+<h3>Appendix D - Evidence manifest</h3>
+
+<table>
+<tr><th>File</th><th>SHA-256</th><th>Size (bytes)</th></tr>
+<tr><td>authentication.csv</td><td>446a08b7085caa2517f607ba364edf7de2aaaa411551e218982443ac9d3ff4d6</td><td>712</td></tr>
+<tr><td>browser.csv</td><td>79c906f9b1c5d2c5abd937c16494958d294fc157fc4207b204f426ea00e8617c</td><td>604</td></tr>
+<tr><td>data_dictionary.md</td><td>585bb2b0ecc2f5cb19323b2ccdfcf9860e6f655d07b2ef33ed2ce1b7de6f5e7a</td><td>2082</td></tr>
+<tr><td>file_activity.csv</td><td>4ab2e1807eebec01f29ae39eb2b4b8d4be589161dbc6258f094d79a1726c3b0f</td><td>1710</td></tr>
+<tr><td>forensic_artifacts.csv</td><td>5a292bb315114264765bcd9fb68ac4c2f93afffb70e24196c4da869de8ccc4ed</td><td>444</td></tr>
+<tr><td>network.csv</td><td>e6fe8f3a18434151eb5fc62511fe515a49baa288e438845253fa0fb636cc48d6</td><td>616</td></tr>
+<tr><td>usb.csv</td><td>d2ff624607e86e7bb8a1be0545879ab8c62965dd0d976d13f4770a7d5201b923</td><td>486</td></tr>
+</table>
+
+<h3>Appendix E - Evidence package contents</h3>
+
+<table>
+<tr><th>Member</th><th>Uncompressed size (bytes)</th></tr>
+<tr><td>originals/authentication.csv</td><td>712</td></tr>
+<tr><td>originals/browser.csv</td><td>604</td></tr>
+<tr><td>originals/data_dictionary.md</td><td>2082</td></tr>
+<tr><td>originals/evidence_manifest.csv</td><td>631</td></tr>
+<tr><td>originals/file_activity.csv</td><td>1710</td></tr>
+<tr><td>originals/forensic_artifacts.csv</td><td>444</td></tr>
+<tr><td>originals/network.csv</td><td>616</td></tr>
+<tr><td>originals/usb.csv</td><td>486</td></tr>
+<tr><td>evidence_manifest.csv</td><td>631</td></tr>
+<tr><td>timeline.csv</td><td>4845</td></tr>
+<tr><td>findings.json</td><td>37779</td></tr>
+<tr><td>chain_of_custody.jsonl</td><td>8608</td></tr>
+<tr><td>package_manifest.json</td><td>2157</td></tr>
+</table>
+
+<h3>Appendix F - Detection rule catalogue</h3>
+
+<table>
+<tr><th>Rule</th><th>Logic</th><th>Source</th><th>Severity</th><th>Findings</th></tr>
+<tr><td>restricted_file_activity</td><td>File action read/copy/rename/archive/delete references the target workbook</td><td>file_activity</td><td>MEDIUM/HIGH</td><td>F-009..F-011</td></tr>
+<tr><td>restricted_archive_created</td><td>Archive output derived from restricted pricing data</td><td>file_activity</td><td>HIGH</td><td>F-012</td></tr>
+<tr><td>evidence_cleanup</td><td>Deletion of a staged restricted copy</td><td>file_activity</td><td>MEDIUM</td><td>F-022</td></tr>
+<tr><td>unapproved_usb</td><td>USB connect/write with approved=false or device outside allow-list</td><td>usb</td><td>MEDIUM/HIGH</td><td>F-013..F-014</td></tr>
+<tr><td>usb_restricted_copy</td><td>Restricted archive filename written to USB</td><td>usb</td><td>HIGH</td><td>F-015</td></tr>
+<tr><td>cloud_file_share_visit</td><td>Browser category cloud_storage/file_share/webmail or known cloud domain</td><td>browser</td><td>MEDIUM</td><td>F-016..F-017</td></tr>
+<tr><td>external_large_transfer</td><td>Outbound &gt;=10 MB to non-internal, non-allow-listed destination</td><td>network</td><td>HIGH</td><td>F-018..F-019</td></tr>
+<tr><td>failed_login</td><td>Failed authentication from a new/unknown source</td><td>authentication</td><td>MEDIUM</td><td>F-007</td></tr>
+<tr><td>anomalous_login</td><td>Successful login from a new device or deep off-hours</td><td>authentication</td><td>HIGH</td><td>F-008</td></tr>
+<tr><td>anti_forensics</td><td>Log clear, timestomp, wipe tool, or destructive deletion on the endpoint</td><td>forensic_artifacts</td><td>HIGH</td><td>F-020..F-023</td></tr>
+<tr><td>bulk_backup / large_internal_transfer</td><td>Large transfer to an internal/backup destination by a service account</td><td>file_activity / network</td><td>LOW</td><td>F-025..F-026</td></tr>
+<tr><td>approved_usb_write</td><td>Write to an allow-listed USB device</td><td>usb</td><td>LOW</td><td>F-005..F-006</td></tr>
+<tr><td>service_login / scheduled_log_rotation</td><td>Service-account login or scheduled log maintenance</td><td>authentication / forensic</td><td>LOW</td><td>F-024, F-027</td></tr>
+</table>
+
+<h3>Appendix G - Data dictionary controls used</h3>
+
+<table>
+<tr><th>Control</th><th>Value used by the detector</th></tr>
+<tr><td>Timezones</td><td>authentication.csv = America/New_York (UTC-05:00); file_activity.csv = UTC; usb.csv = Asia/Kolkata (UTC+05:30); browser.csv = Europe/London (UTC+00:00); network.csv = UTC; forensic_artifacts.csv = America/Los_Angeles (UTC-08:00)</td></tr>
+<tr><td>Business hours</td><td>09:00-18:00 America/New_York, Monday-Friday</td></tr>
+<tr><td>Authorised pricing user</td><td>alice.chen (bob.martin explicitly NOT authorised)</td></tr>
+<tr><td>Approved USB devices</td><td>USB-APPR-1140, USB-APPR-2210</td></tr>
+<tr><td>Backup schedule</td><td>svc_backup daily 02:00 UTC to backup.acme-internal.com; logrotate on SRV-BACKUP01</td></tr>
+<tr><td>Target hint</td><td>FY26_Pricing_Model_RESTRICTED.xlsx on \\fileserver\finance\Restricted</td></tr>
+</table>
+
+<p>---</p>
+
+<p><strong>End of report.</strong> This report is a technical DFIR product. It separates observed facts with evidence IDs from assumptions and gaps, and it does not assert legal guilt or identity beyond the account and endpoint shown.</p></body></html>
